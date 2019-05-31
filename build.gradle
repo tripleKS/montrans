@@ -1,0 +1,52 @@
+plugins {
+    id "java"
+}
+
+group 'com.task.rvt.mt.model'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
+    compile group: 'com.h2database', name: 'h2', version: '1.4.199'
+    compile group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.6.0'
+
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.11.2'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.2'
+
+    compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.18.v20190429'
+
+    compile group: 'org.jboss.resteasy', name: 'resteasy-jaxrs', version: '3.7.0.Final'
+    compile group: 'org.jboss.resteasy', name: 'resteasy-jackson2-provider', version: '3.7.0.Final'
+    compile group: 'org.jboss.resteasy', name: 'resteasy-servlet-initializer', version: '3.7.0.Final'
+    compile group: 'org.jboss.resteasy', name: 'resteasy-guice', version: '3.7.0.Final'
+
+    compile group: 'com.google.inject', name: 'guice', version: '4.0'
+    compile group: 'com.google.inject.extensions', name: 'guice-servlet', version: '4.0'
+    compile group: 'com.google.inject.extensions', name: 'guice-multibindings', version: '4.0'
+
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
+    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.12.2'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Version': version,
+                'Main-Class': 'com.task.rvt.mt.TransferMoneyApplication'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
