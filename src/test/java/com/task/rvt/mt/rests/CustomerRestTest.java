@@ -14,6 +14,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -48,10 +49,8 @@ public class CustomerRestTest {
 
     @Test
     public void testCustomersListNotEmpty() throws Exception {
-        List<Customer> customers = new ArrayList<>();
         Customer customer = mock(Customer.class);
-        customers.add(customer);
-        when(customerService.listCustomers()).thenReturn(customers);
+        when(customerService.listCustomers()).thenReturn(Collections.singletonList(customer));
         Response response = customerRest.listCustomers();
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
@@ -112,10 +111,8 @@ public class CustomerRestTest {
 
     @Test
     public void testGetExistingCustomerExistingAccounts() throws Exception {
-        List<Account> accounts = new ArrayList<>();
         Account account = mock(Account.class);
-        accounts.add(account);
-        when(customerService.listCustomerAccounts(anyLong())).thenReturn(accounts);
+        when(customerService.listCustomerAccounts(anyLong())).thenReturn(Collections.singletonList(account));
 
         Response response = customerRest.listCustomerAccounts(anyLong());
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
