@@ -10,6 +10,7 @@ CREATE TABLE account(
     account_number VARCHAR(20) PRIMARY KEY,
     customer_id INT NOT NULL,
     balance NUMERIC(8,2),
+    version BIGINT NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES customer(id)
 );
 

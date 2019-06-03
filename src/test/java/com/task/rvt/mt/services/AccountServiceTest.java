@@ -17,6 +17,7 @@ import static com.task.rvt.mt.model.Customer.CUSTOMER_ZERO;
 import static com.task.rvt.mt.services.ErrorCodes.INTERNAL_ERROR;
 import static com.task.rvt.mt.services.ErrorCodes.NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -32,24 +33,22 @@ public class AccountServiceTest {
     public void testGetMissingAccountByNumber() throws Exception {
         when(accountDao.getAccountByNumber(anyString())).thenReturn(ACCOUNT_ZERO);
 
-        try {
-            accountService.getAccountByNumber("foo");
-        } catch (MTransferException e) {
-            assertThat(e.getErrorCode()).isEqualTo(NOT_FOUND);
-            assertThat(e.getMessage()).isEqualTo("Account with number [foo] was not found in the system.");
-        }
+        Throwable mte = catchThrowable(() -> accountService.getAccountByNumber("foo") );
+        assertThat(mte)
+                .isInstanceOf(MTransferException.class)
+                .hasMessage("Account with number [foo] was not found in the system.");
+        assertThat(((MTransferException)mte).getErrorCode()).isEqualTo(NOT_FOUND);
     }
 
     @Test
     public void testGetAccountByNumberSqlException() throws Exception {
         when(accountDao.getAccountByNumber(anyString())).thenThrow(new SQLException("Some reason"));
 
-        try {
-            accountService.getAccountByNumber("foo");
-        } catch (MTransferException e) {
-            assertThat(e.getErrorCode()).isEqualTo(INTERNAL_ERROR);
-            assertThat(e.getMessage()).isEqualTo("Internal error");
-        }
+        Throwable mte = catchThrowable(() -> accountService.getAccountByNumber("foo") );
+        assertThat(mte)
+                .isInstanceOf(MTransferException.class)
+                .hasMessage("Internal error");
+        assertThat(((MTransferException)mte).getErrorCode()).isEqualTo(INTERNAL_ERROR);
     }
 
     @Test
@@ -66,24 +65,22 @@ public class AccountServiceTest {
     public void testAccountDoesnotBelongToAnyCustomerException() throws Exception {
         when(accountDao.getAccountOwner(anyString())).thenReturn(CUSTOMER_ZERO);
 
-        try {
-            accountService.getAccountOwner("account-number");
-        } catch (MTransferException e) {
-            assertThat(e.getErrorCode()).isEqualTo(NOT_FOUND);
-            assertThat(e.getMessage()).isEqualTo("Customer to whom account [account-number] belong to was not found in the system. inconsistent data?");
-        }
+        Throwable mte = catchThrowable(() -> accountService.getAccountOwner("account-number") );
+        assertThat(mte)
+                .isInstanceOf(MTransferException.class)
+                .hasMessage("Customer to whom account [account-number] belong to was not found in the system. inconsistent data?");
+        assertThat(((MTransferException)mte).getErrorCode()).isEqualTo(NOT_FOUND);
     }
 
     @Test
     public void testGetAccountOwnerSqlException() throws Exception {
         when(accountDao.getAccountOwner(anyString())).thenThrow(new SQLException());
 
-        try {
-            accountService.getAccountOwner("account-number");
-        } catch (MTransferException e) {
-            assertThat(e.getErrorCode()).isEqualTo(INTERNAL_ERROR);
-            assertThat(e.getMessage()).isEqualTo("Internal error");
-        }
+        Throwable mte = catchThrowable(() -> accountService.getAccountOwner("account-number") );
+        assertThat(mte)
+                .isInstanceOf(MTransferException.class)
+                .hasMessage("Internal error");
+        assertThat(((MTransferException)mte).getErrorCode()).isEqualTo(INTERNAL_ERROR);
     }
 
     @Test

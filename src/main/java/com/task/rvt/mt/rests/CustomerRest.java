@@ -42,7 +42,7 @@ public class CustomerRest {
     @Produces("application/json")
     public Response listCustomers() {
         String label = RandomStringGenerator.generateString(LABEL_LENGTH);
-        LOG.debug("Getting list of all customers {}", label);
+        LOG.debug("Getting list of all customers. LBL: {}", label);
         long start = System.currentTimeMillis();
 
         Response response;
@@ -55,7 +55,7 @@ public class CustomerRest {
         }
 
         long end = System.currentTimeMillis();
-        LOG.debug("Getting all customers took ms: [{}] , {}", (end - start), label);
+        LOG.debug("Getting all customers took ms, LBL: [{}] , {}", (end - start), label);
 
         return response;
     }
@@ -65,7 +65,7 @@ public class CustomerRest {
     @Produces("application/json")
     public Response getCustomerByPersonalId(@PathParam("personalId") String personalId) {
         String label = RandomStringGenerator.generateString(LABEL_LENGTH);
-        LOG.debug("Getting customer by personal Id {}", label);
+        LOG.debug("Getting customer by personal Id. LBL: {}", label);
         long start = System.currentTimeMillis();
 
         Response response;
@@ -74,12 +74,12 @@ public class CustomerRest {
             Map<String, Object> enhancedCustomerInfo = updateCustomerInfoWithUriLinks(customer);
             response = Response.ok(enhancedCustomerInfo).build();
         } catch (MTransferException e) {
-            LOG.warn("Getting customers by id failed.", e);
+            LOG.warn("Getting customers by id failed. LBL: {}", e);
             response = Response.status(Response.Status.fromStatusCode(e.getErrorCode())).entity(e.getMessage()).build();
         }
 
         long end = System.currentTimeMillis();
-        LOG.debug("Fetching customer info by personal id took ms: [{}], {}", (end - start), label);
+        LOG.debug("Fetching customer info by personal id took ms, LBL: [{}], {}", (end - start), label);
 
         return response;
     }
@@ -106,7 +106,7 @@ public class CustomerRest {
     @Produces("application/json")
     public Response listCustomerAccounts(@PathParam("customerId") long customerId) {
         String label = RandomStringGenerator.generateString(LABEL_LENGTH);
-        LOG.debug("Getting all customer's accounts");
+        LOG.debug("Getting all customer's accounts. LBL: [{}]", label);
         long start = System.currentTimeMillis();
 
         Response response;
@@ -119,7 +119,7 @@ public class CustomerRest {
         }
 
         long end = System.currentTimeMillis();
-        LOG.debug("Getting all customer's accounts took ms: [{}], {}", (end - start), label);
+        LOG.debug("Getting all customer's accounts took ms, LBL: [{}], {}", (end - start), label);
 
         return response;
     }
@@ -129,7 +129,7 @@ public class CustomerRest {
     @Consumes("application/json")
     public Response transferMoney(@PathParam("customerId") long customerId, Transfer transfer) {
         String label = RandomStringGenerator.generateString(LABEL_LENGTH);
-        LOG.debug("Transfer money from account[" + transfer.getAccountFrom() + "] to account[" + transfer.getAccountTo() + "]");
+        LOG.debug("Transfer money from account[" + transfer.getAccountFrom() + "] to account[" + transfer.getAccountTo() + "]. LBL: {}", label);
         long start = System.currentTimeMillis();
 
         Response response;
@@ -137,12 +137,12 @@ public class CustomerRest {
             transferService.transferMoneyBetweenAccounts(customerId, transfer);
             response = Response.ok("Transfer completed").build();
         } catch (MTransferException e) {
-            LOG.warn("Transfer did not happen.", e);
+            LOG.warn("Transfer did not happen. LBL: {}", label, e);
             response = Response.status(Response.Status.fromStatusCode(e.getErrorCode())).entity(e.getMessage()).build();
         }
 
         long end = System.currentTimeMillis();
-        LOG.debug("Transferring took ms: [{}], {}", (end - start), label);
+        LOG.debug("Transferring took ms, LBL: [{}], {}", (end - start), label);
 
         return response;
     }

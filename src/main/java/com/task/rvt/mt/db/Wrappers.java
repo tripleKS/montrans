@@ -10,9 +10,9 @@ final class Wrappers {
     static Account wrapAccount(ResultSet rs) throws SQLException {
         return new Account(rs.getString("account_number"),
                 rs.getLong("customer_id"),
-                rs.getBigDecimal("balance"));
+                rs.getBigDecimal("balance"),
+                rs.getLong("version"));
     }
-
 
     static Customer wrapCustomer(ResultSet rs) throws SQLException {
         return new Customer(rs.getLong("id"),
