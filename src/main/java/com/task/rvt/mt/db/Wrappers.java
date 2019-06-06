@@ -2,6 +2,7 @@ package com.task.rvt.mt.db;
 
 import com.task.rvt.mt.model.Customer;
 import com.task.rvt.mt.model.Account;
+import com.task.rvt.mt.model.Transaction;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,6 +21,14 @@ final class Wrappers {
                 rs.getString("name"),
                 rs.getString("phone"),
                 rs.getString("email"));
+    }
+
+    public static Transaction wrapTransaction(ResultSet rs) throws SQLException {
+        return new Transaction(rs.getLong("id"),
+                rs.getString("account_from"),
+                rs.getString("account_to"),
+                rs.getBigDecimal("amount"),
+                rs.getTimestamp("transaction_date"));
     }
 
     private Wrappers() {

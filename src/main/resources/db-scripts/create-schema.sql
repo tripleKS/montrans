@@ -14,11 +14,13 @@ CREATE TABLE account(
     FOREIGN KEY (customer_id) REFERENCES customer(id)
 );
 
-CREATE TABLE transaction_history(
+CREATE TABLE transactions_history(
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    account_from VARCHAR(20),
+    account_from VARCHAR(20) NOT NULL,
     account_to VARCHAR(20) NOT NULL,
     amount NUMERIC(8,2),
+    transaction_date TIMESTAMP DEFAULT current_timestamp,
+
     FOREIGN KEY (account_from) REFERENCES account(account_number),
     FOREIGN KEY (account_to) REFERENCES account(account_number)
 );

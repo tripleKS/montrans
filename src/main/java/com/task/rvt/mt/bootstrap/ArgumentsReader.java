@@ -14,7 +14,7 @@ import java.util.Properties;
 public class ArgumentsReader {
     private static final Logger LOG = LogManager.getLogger(ArgumentsReader.class);
 
-    private static final String ARG_PORT = "jettyPort";
+    private static final String ARG_PORT = "port";
     private static final String ARG_NAME = "property=value";
     private static final String JAVA_PARAM_CONVENTION = "D";
 
@@ -43,10 +43,12 @@ public class ArgumentsReader {
                 Properties properties = cmd.getOptionProperties(JAVA_PARAM_CONVENTION);
                 port = Integer.valueOf(properties.getProperty(ARG_PORT));
 
-                LOG.info("Jetty port is set to: {}", port);
+                LOG.info("Connector port is set to: {}", port);
+            } else{
+                LOG.info("Connector port is not defined. A random port will be selected to start AS");
             }
         } catch (ParseException | NumberFormatException e) {
-            LOG.warn("Failure during parsing Jetty port from program arguments. Root cause: [{}]", e.toString());
+            LOG.warn("Failure during parsing AS port from program arguments. Root cause: [{}]", e.toString());
         }
 
         return port;

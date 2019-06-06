@@ -26,7 +26,7 @@ public class AccountDaoImpl implements AccountDao {
     private static final String ACCOUNT_OWNER = "select c.* from customer c, account a where c.id = a.customer_id and a.account_number = ?";
     private static final String REDUCE_BALANCE = "update account SET balance = balance - ?, version = version + 1 WHERE account_number = ? AND version = ?";
     private static final String INCREASE_BALANCE = "update account SET balance = balance + ?, version = version + 1 WHERE account_number = ? AND version = ?";
-    private static final String LOG_TRANSACTION = "insert into transaction_history (account_from, account_to, amount) VALUES(?, ?, ?);";
+    private static final String LOG_TRANSACTION = "insert into transactions_history (account_from, account_to, amount) VALUES(?, ?, ?);";
 
     @Inject
     private DataSourcePool dataSourcePool;
@@ -127,6 +127,7 @@ public class AccountDaoImpl implements AccountDao {
                 logTransferSql.setString(2, transfer.getAccountTo());
                 logTransferSql.setBigDecimal(3, transfer.getAmount());
                 logTransferSql.execute();
+                connection.commit();
             } catch (Exception e) {
                 LOG.warn("Money transfer rolled back. Error occurred: ", e);
                 connection.rollback();

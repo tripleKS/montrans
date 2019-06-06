@@ -1,10 +1,12 @@
 package com.task.rvt.mt.rests;
 
 import com.task.rvt.mt.model.Customer;
+import com.task.rvt.mt.model.Transaction;
 import com.task.rvt.mt.model.Transfer;
 import com.task.rvt.mt.model.Account;
 import com.task.rvt.mt.services.CustomerService;
-import com.task.rvt.mt.services.MTransferException;
+import com.task.rvt.mt.services.TransactionService;
+import com.task.rvt.mt.util.MTransferException;
 import com.task.rvt.mt.services.TransferService;
 import com.task.rvt.mt.util.RandomStringGenerator;
 import org.apache.logging.log4j.LogManager;
@@ -17,6 +19,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +40,8 @@ public class CustomerRest {
     private CustomerService customerService;
     @Inject
     private TransferService transferService;
+    @Inject
+    private TransactionService transactionService;
 
     @GET
     @Produces("application/json")
@@ -143,6 +148,30 @@ public class CustomerRest {
 
         long end = System.currentTimeMillis();
         LOG.debug("Transferring took ms, LBL: [{}], {}", (end - start), label);
+
+        return response;
+    }
+
+    @GET
+    @Path("/{customerId}/accounts/{accountNumber}/transactions")
+    @Produces("application/json")
+    public Response listTransactions(@PathParam("customerId") long customerId, @PathParam("accountNumber") String accountNumber,
+                                     @QueryParam("from") String fromDate, @QueryParam("to") String toDate) {
+        String label = RandomStringGenerator.generateString(LABEL_LENGTH);
+        LOG.debug("Getting transactional history of customer account. [Customer, Account, from-date, to-date], LBL: [{},{},{},{}], {}", customerId, accountNumber, fromDate, toDate, label);
+        long start = System.currentTimeMillis();
+
+        Response response;
+        try {
+            List<Transaction> traxes = transactionService.listTransactions(customerId, accountNumber, fromDate, toDate);
+            response = Response.ok(traxes).build();
+        } catch (MTransferException e) {
+            LOG.warn("Retrieving transactions failed. LBL: {}", label, e);
+            response = Response.status(Response.Status.fromStatusCode(e.getErrorCode())).entity(e.getMessage()).build();
+        }
+
+        long end = System.currentTimeMillis();
+        LOG.debug("Retrieving transactional history  took ms, LBL: [{}], {}", (end - start), label);
 
         return response;
     }

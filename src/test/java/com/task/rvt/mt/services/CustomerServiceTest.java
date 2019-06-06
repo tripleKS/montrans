@@ -4,6 +4,7 @@ import com.task.rvt.mt.db.AccountDao;
 import com.task.rvt.mt.db.CustomerDao;
 import com.task.rvt.mt.model.Account;
 import com.task.rvt.mt.model.Customer;
+import com.task.rvt.mt.util.MTransferException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

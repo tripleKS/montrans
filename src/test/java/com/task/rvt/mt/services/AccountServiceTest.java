@@ -3,6 +3,7 @@ package com.task.rvt.mt.services;
 import com.task.rvt.mt.db.AccountDao;
 import com.task.rvt.mt.model.Account;
 import com.task.rvt.mt.model.Customer;
+import com.task.rvt.mt.util.MTransferException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -14,8 +15,8 @@ import java.sql.SQLException;
 
 import static com.task.rvt.mt.model.Account.ACCOUNT_ZERO;
 import static com.task.rvt.mt.model.Customer.CUSTOMER_ZERO;
-import static com.task.rvt.mt.services.ErrorCodes.INTERNAL_ERROR;
-import static com.task.rvt.mt.services.ErrorCodes.NOT_FOUND;
+import static com.task.rvt.mt.util.ErrorCodes.INTERNAL_ERROR;
+import static com.task.rvt.mt.util.ErrorCodes.NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.anyString;

@@ -4,13 +4,14 @@ import com.task.rvt.mt.db.AccountDao;
 import com.task.rvt.mt.model.Account;
 import com.task.rvt.mt.model.Customer;
 import com.task.rvt.mt.model.Transfer;
+import com.task.rvt.mt.util.MTransferException;
 
 import javax.inject.Inject;
 import java.sql.SQLException;
 
 import static com.task.rvt.mt.model.Account.ACCOUNT_ZERO;
-import static com.task.rvt.mt.services.ErrorCodes.INTERNAL_ERROR;
-import static com.task.rvt.mt.services.ErrorCodes.NOT_FOUND;
+import static com.task.rvt.mt.util.ErrorCodes.INTERNAL_ERROR;
+import static com.task.rvt.mt.util.ErrorCodes.NOT_FOUND;
 
 public class AccountServiceImpl implements AccountService {
     @Inject
