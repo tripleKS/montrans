@@ -22,6 +22,7 @@ import com.task.rvt.mt.services.TransferServiceImpl;
 public class MoneyTransferModule implements Module {
     @Override
     public void configure(Binder binder) {
+        binder.bind(RootApplicationRest.class);
         binder.bind(CustomerRest.class);
         binder.bind(CustomerService.class).to(CustomerServiceImpl.class);
         binder.bind(CustomerDao.class).to(CustomerDaoImpl.class);
